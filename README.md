@@ -1,6 +1,6 @@
 # Simpleweb backend developer challenge
 
-Using the language and framework of your choice, please create a read-only, RESTful JSON API that allows a consumer to access a list of car parks located in the UK. The car park data can be found within the attached json file.
+Using the language and framework of your choice, please create a read-only, RESTful JSON API that allows a consumer to access a list of car parks located in the UK. The car park data can be found within the [car_parks.json](https://github.com/simpleweb/backend-developer-challenge/blob/main/car_parks.json) file within this respository.
 
 ## Requirements
 
