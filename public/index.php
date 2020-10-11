@@ -1,25 +1,34 @@
 <?php
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response as SlimReponse;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Model\MongoCarPark;
 
 require __DIR__ . '/../vendor/autoload.php';
-
+$config = json_decode(file_get_contents("config.json"), true);
 
 $app = AppFactory::create();
+$app->add(function ($request, $handler) use ($config) {
+    foreach ($request->getHeader("Api-key") as $header) {
+        if (in_array($header, $config['api-keys'] ?? [])) {
+            return $handler->handle($request);
+        }
+    }
+    
+    return new SlimReponse(401);
+});
 
-$app->get('/car_parks', function (Request $request, Response $response, $args) {
-    $response->getBody()->write(getCarparks($request));
+$app->get('/car_parks', function (Request $request, Response $response, $args) use ($config) {
+    $response->getBody()->write(getCarparks($config, $request));
     return $response->withHeader('Content-Type', 'application/json');
 });
 
 
 $app->run();
 
-function getCarparks(Request $request)
+function getCarparks(array $config, Request $request)
 {
-    $config = json_decode(file_get_contents("config.json"), true);
     $model = new MongoCarPark($config['mongo']);
     return $model->get(
         getFilter($request),
