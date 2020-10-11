@@ -30,15 +30,25 @@ function getCarparks(Request $request)
 
 function getFilter(Request $request)
 {
-    return [];
+    $params = $request->getQueryParams();
+    $filter = [];
+    if ($params['park_and_ride'] ?? false) {
+        $filter['features.park_and_ride'] = true;
+    }
+    if ($params['electric_car_charge_point'] ?? false) {
+        $filter['features.electric_car_charge_point'] = true;
+    }
+    return $filter;
 }
 
 function getPageNo(Request $request)
 {
-    return 1;
+    $params = $request->getQueryParams();
+    return intval($params['page'] ?? 0);
 }
 
 function getPerPage(Request $request)
 {
-    return 1;
+    $params = $request->getQueryParams();
+    return intval($params['perPage'] ?? 20);
 }
