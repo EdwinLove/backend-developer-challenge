@@ -1,0 +1,7 @@
+{
+    "mongo":{
+        "url":"",
+        "username":"",
+        "password":""
+    }
+}

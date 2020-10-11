@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.2",
+        "mongodb/mongodb": "^1.7"
+    }
+}
