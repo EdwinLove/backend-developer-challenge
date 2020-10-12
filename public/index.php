@@ -1,9 +1,9 @@
 <?php
+use MongoDB\Client as MongoClient;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Psr7\Response as SlimReponse;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Response as SlimReponse;
 use Slim\Factory\AppFactory;
-use Model\MongoCarPark;
 
 require __DIR__ . '/../vendor/autoload.php';
 $config = json_decode(file_get_contents("config.json"), true);
@@ -29,12 +29,23 @@ $app->run();
 
 function getCarparks(array $config, Request $request)
 {
-    $model = new MongoCarPark($config['mongo']);
-    return $model->get(
-        getFilter($request),
-        getPageNo($request),
-        getPerPage($request)
+    $client = new MongoClient(
+        $config['mongo']["url"],
+        [
+            'username' => $config['mongo']["username"],
+            'password' => $config['mongo']["password"]
+        ]
     );
+
+    return json_encode(iterator_to_array($client->simpleweb->car_parks->find(
+        getFilter($request),
+        [
+            'projection' =>['_id' => 0],
+            'limit' => getIntQueryParam($request, 'perPage', 20), 
+            'skip' => getIntQueryParam($request, 'page', 1)
+        ]
+    )));
+
 }
 
 function getFilter(Request $request)
@@ -50,14 +61,8 @@ function getFilter(Request $request)
     return $filter;
 }
 
-function getPageNo(Request $request)
+function getIntQueryParam(Request $request, string $param, int $default)
 {
     $params = $request->getQueryParams();
-    return intval($params['page'] ?? 0);
-}
-
-function getPerPage(Request $request)
-{
-    $params = $request->getQueryParams();
-    return intval($params['perPage'] ?? 20);
+    return intval($params[$param] ?? $default);
 }
