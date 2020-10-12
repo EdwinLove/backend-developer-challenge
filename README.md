@@ -1,24 +1,15 @@
 # Simpleweb backend developer challenge
 
-Using the language and framework of your choice, please create a read-only, RESTful JSON API that allows a consumer to access a list of car parks located in the UK. The car park data can be found within the [car_parks.json](https://github.com/simpleweb/backend-developer-challenge/blob/main/car_parks.json) file within this respository.
+## Approach
 
-## Requirements
+My approach with this was small lightweight and fast. I didn't want to reinvent the wheel and I didn't have a lot of time.
 
-The API must fulfil the following requirements, with tests around the code you write as you deem appropriate.
+After some messing around trying to spin up enough basic symfony components to make this work I thought it was too bloated so decided to use Slim4 and (after a little refactoring to remove a bit of overengineering I introduced with Model calsses and interfaces) produced it with a simple single file app with no objects at all.
 
-- The API must be protected using an API key.
-- The API must support pagination with a limit of 20 results per page.
-- The consumer must be able to filter car parks by features, including "park and ride" and "electric car charge point".
+Due to time constraints (it took a while to get mongo installed and running) there are aspects that are not up to production standard and there are no tests and not enough guards against bad or invalid data or error handling but as it is read only this is not as important.
 
-## Bonus credits
+## Setup
 
-Extra bonus credit features you might consider, but are not required.
-
-- Allow the consumer to locate the car parks within a specified radius from a given latitude and longitude.
-- Throttle API requests on a per API key basis. After the first 100 requests per day, throttle to 1 request per 10 seconds.
-
-Please push the project to a repository on GitHub for us to evaluate. Please include any documentation such as set up instructions and summerise the approach you have taken within the project README file.
-
-## Improvements
-
-We are always looking to improve our testing. If you have any suggestions or feedback on this test, please make notes and include it with your submission.
+* A mongo database must be set up and populated with the data from the json file.
+* composer install must be run to set up all of the dependencies.
+* The config.json.dist file needs to be copied to config.json and have the configuration values set to talk to the mongo database and also an array of allowed api keys to enable access.
